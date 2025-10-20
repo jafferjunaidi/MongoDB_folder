@@ -1,0 +1,128 @@
+---Set Operator----
+db.SRO.update
+(
+   {},
+   {$set:{branch:"main branch"}},{multi:true}     <----deprecated method
+)
+
+--new method--
+
+db.SRO.updateMany
+(
+  {},
+  {$set:{password:"1234"}}
+)
+
+db.SRO.updateOne
+( 
+  {name:"Basit"},
+  {$set:{country:"Pakistan"}}
+)
+
+
+----Array----
+
+db.SRO.updateMany
+(
+   {},
+   {$set:{slot:["9-11","11-1"]}}
+)
+
+db.SRO.updateOne
+(
+   {name:"Hamdan"},
+   {$set:{slot:["3-5"]}}
+)
+
+---Unset Operator (delete document's field)----
+
+db.SRO.updateOne
+(
+ {name:"Basit"},
+ {$unset:{country:""}}
+)
+
+db.SRO.updateMany
+(
+  {},
+  {$unset:{password:""}}
+)
+                           
+--Rename Operator (Rename fields/keys)---
+
+db.SRO.updateMany
+(
+ {},
+ {$rename:{age:"sro_age", branch:"sro_branch"}}
+)
+
+db.SRO.updateOne
+(
+  {sro_name:"Khalid"},
+  {$rename:{city:"sro_city"}}
+)
+
+db.employee.insertMany
+([
+{name:'Junaid',age:16},
+{name:'Hamza',age:17},
+{name:'Usman',age:18},
+{name:'Sufiyan',age:19},
+{name:'Tabish',age:20},
+{name:'Fahad',age:21},
+{name:'Arsalan',age:22},
+{name:'Yasir',age:23},
+{name:'Saad',age:24},
+{name:'Kamran',age:25},
+{name:'Mansoor',age:26},
+{name:'Ali',age:27},
+{name:'Hasan',age:28},
+{name:'Waleed',age:29},
+{name:'Noman',age:30},
+{name:'Javed',age:31},
+{name:'Kashif',age:32},
+{name:'Waris',age:33},
+{name:'Mudassir',age:34},
+{name:'Qasim',age:35},
+{name:'Ibrahim',age:6},
+{name:'Farhan',age:5},
+{name:'Ishaq',age:4},
+{name:'Osama',age:3},
+{name:'Irfan',age:2},
+{name:'Atif',age:1},
+{name:'Daim',age:11},
+{name:'Talha',age:12},
+{name:'Zahid',age:13},
+{name:'Umar',age:14},
+{name:'Abdullah',age:15}
+])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
