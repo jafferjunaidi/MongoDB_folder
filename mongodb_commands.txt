@@ -1,0 +1,485 @@
+MongoDB commands:
+
+show dbs  <---- show all database
+
+use database  <---- Create and select database
+
+db.dropDatabase() <--- completely drop database with collections
+
+db.company.drop()  <--- drop collection / delete collection
+
+db.createCollection("students_name") <---- Create collection
+
+[In your database if you don't have collection this command will create collection as well as insert data]
+
+db.collectionname.insertOne(
+{                           
+name:"Ali",                   
+age:20
+}
+)
+
+show collections <---- show all collections which is present in database
+
+db.Books_collection.renameCollection('books_library') <--- rename collection
+
+db.school_collection.insertMany(
+[
+  {name:"Jaffer",age:20,city:"Karachi"},
+  {name:"Hamid",age:24,city:"Karachi"},
+  {name:"Salman",age:20,city:"Lahore"},
+  {name:"Saad",age:15,city:"Multan"},
+  {name:"Hamza",age:19,city:"Karachi"},
+  {name:"Mishkat",age:20,city:"Lahore"}
+])
+
+db.CollectionName.updateOne({_id: ObjectId('674b7abb4441ec727c34ee37')},{$rename:{"oldFieldName":"newFieldName"}})
+
+db.CollectionName.updateMany({},{$rename:{"oldFieldName":"newFieldName"}}) <---rename fields or fields key 
+
+db.school_collection.updateOne({name:"Daim",city:"Karachi"},{$set:{name:"Faisal",city:"Islamabad"}})
+
+db.school_collection.updateMany({},{$set:{city:"Lahore"}}) 
+
+db.student.find().limit(2) <---prints two documents from the collection
+
+db.employee.updateOne({name:'Junaid'},{$set:{hasCSSdegree:true}})
+
+db.practice.updateOne({name:'Hamza'},{$set:{idcard:{cnic:false, Bform:true}}})  <----nested documents
+
+db.practice.updateMany({age:{$gte:18}},{$set:{idcard:{cnic:true,bform:true}}})  <----nested documents
+
+db.manager.updateMany({age:20},{$set:{eligible:true}})
+
+db.manager.updateMany({},{$set:{City:'Karachi'}})
+
+db.practice.find({hobbies:'boxing'})
+
+db.practice.find({hobbies:'swimming'}).count()  <----count hobby in your collection's documents
+
+db.manager.find({hobbies:'swimming'}).toArray()  <---print all swimming hobby documents only
+
+db.student.find().count()   <----count all documents in your collection 
+
+db.practice.find({'idcard.cnic':true})  <-----search nested documents
+
+db.student.find().toArray()  <----print all data from the document
+
+db.employee.find().forEach(x=>printjson(x))  <----print all documents
+
+db.employee.find({hasCSSdegree:true}) <--- search fields which has boolean value true
+
+db.employee.find({hasCSSdegree:false}) <--- search fields which has boolean value false
+
+db.manager.deleteOne({name:'Ali'})  <----delete single document which has name Ali
+
+db.manager.deleteMany({age:18}) <----delete multiple documents which have age 18 
+
+db.mycollection.deleteMany({})  <---delete all documents from your collection, however collection will not be deleted.
+
+db.manager.find({},{name:1})  <---(projection) Only fetch document object id and names
+
+db.manager.find({},{_id:0,name:1})  <---(projection) Only fetch names without document object id
+
+typeof db.manager.findOne().name  <---check datatype of field name
+
+db.mycollection.insertMany([{_id:1,name:'Ali',age:19},{_id:2,name:'Fahad',age:20},{_id:3,name:'Basit',age:21}]) <---inserts your own id
+
+db.collection.insertMany([{_id:4,name:'Arsalan',age:25},{_id:2,name:'Furqan',age:27},{_id:6,name:'Jawed',age:29}],{ordered:false}) <-- ordered option
+
+db.students.find({"experience.company":"Amazon"}) <--search field and key inside json '{}' , json '{}' and array object or search in array object
+
+db.students.find({"experience.company":"Spotify"}).size() <--same as count() operator print total count
+
+db.students.find({experience:{$size:3} } ) <--print all documents which have field experience array three objects
+example:
+  experience: [
+    {
+      company: 'Amazon',    <---object 1
+      duration: 1
+    },
+
+    {
+      company: 'Flipkart',   <---object 2
+      duration: 2
+    },
+
+    {
+      company: 'Apple',     <---object 3
+      duration: 5
+    }
+  ]
+
+
+db.students.find({$and:[ { experience:{$exists: true} },{ $expr:{$gte:[{ $size: "$experience" } , 3] } } ] } ) <--print all documents which have field 
+experience array three objects or greater than three objects
+
+
+db.data.find({hobbies:{$all:['cricket','football']}}) <-- recommended always use it to print all documents which have fields array list is in sequence or
+non-sequence manner
+example:
+{
+  _id: ObjectId('67686e65ab43b00a9918cdad'),
+  name: 'Junaid',
+  age: 16,
+  hobbies: [
+    'cricket',
+    'football'
+  ]
+},
+
+{
+  _id: ObjectId('67686e65ab43b00a9918cdae'),
+  name: 'Hamza',
+  age: 17,
+  hobbies: [
+    'football',
+    'cricket'
+  ]
+}
+
+db.fruit_stall.find( {products: {$elemMatch:{quantity:{$gt:12},fruit:'apple'} } }) <--search all documents with this fruit and quantity field means one 
+element in entire documents and print those documents where quantity greater than 12 and fruit is apple
+example:
+
+ _id: 2,
+  products: [
+    {
+      fruit: 'apple',
+      quantity: 16
+    },
+    {
+      fruit: 'orange',
+      quantity: 8
+    },
+    {
+      fruit: 'banana',
+      quantity: 4
+    }
+  ]
+}
+                                                                                                                          e.g:duration
+db.practice.find({experience:{$elemMatch:{duration:{$lte:1}}}}) <--filter applied on array element. Field array ma one element ^ ka data jo ka multiple
+documents ma hain search karna ka lia 
+e.g:   
+
+experience: [
+    { 
+      company: 'Amazon',
+      duration: 1
+    },
+
+
+db.employee.find().sort({age:1}) <--sorting age in ascending order (chota sa bara)
+example:
+{
+  _id: ObjectId('674b7abb4441ec727c34ee50'),
+  name: 'Atif',
+  age: 1
+}
+{
+  _id: ObjectId('674b7abb4441ec727c34ee4f'),
+  name: 'Irfan',
+  age: 2
+}
+
+
+db.employee.find().sort({age:-1}) <--sorting age in descending order (bara sa chota)
+example:
+{
+  _id: ObjectId('674b7abb4441ec727c34ee4a'),
+  name: 'Qasim',
+  age: 35
+}
+
+{
+  _id: ObjectId('674b7abb4441ec727c34ee49'),
+  name: 'Mudassir',
+  age: 34
+}
+
+db.manager.find().sort({age:1,name:1})
+
+db.manager.find().sort({age:-1,name:-1})
+
+db.employee.find().sort({age:1,name:1}).forEach(x=>printjson(x)) <--Total print all documents in ascending order
+
+db.employee.find().sort({age:1,name:1}).skip(25) <-- starting 25 documents will be skip after 25 documents remaining of the documents will be printed
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Comparison operators in MongoDB[Reserved keywords: $eq(equal),$ne(not equal),$lt(less than),$lte(less than equal to),
+$gt(greater than),$gte(greater than equal to),$in(in),$nin(not in)]:
+
+db.school_collection.find({name:{$eq:"Salman"}})
+
+db.collection.find({age:{$eq:14}})
+
+db.collection.find({age:{$ne:12}})
+
+db.practice.find({age:{$lt:18}}) <----less than
+
+db.practice.find({age:{$lte:18}})  <----less than equals to
+
+db.practice.find({age:{$lte:18}}).count()  <----less than equals to count
+
+db.practice.find({age:{$gt:18}}) <----greater than 
+
+db.practice.find({age:{$gte:18}}) <----greater than equals to
+
+db.practice.find({age:{$gte:18}}).count() <----greater than equals to count
+
+db.practice.find({age:{$gt:5,$lt:13}}) <---- range from 6 to 12 
+
+db.students.find({hobbies:{$in:["Painting","Reading"]}}) <--print documents which have one of these hobby
+
+db.school_collection.find({name:{$in:["Jaffer","Hamid"]}}) <---this command will show documents which have names Jaffer and Hamid
+
+db.school_collection.find({age:{$in:[12,14,17]}}) <---this command will show documents which have age 12, 14 and 17
+
+db.collection.find({age:{$nin:[12,13]}}) <---this command shows all documents except which have age 12 and 13 
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Logical Operators in MongoDB($not,$and,$or,$nor):
+                      
+                               (conditions)
+                           |---------^---------|
+db.employee.find({$or:[{age:{$lt:5}},{age:{$gt:32}}]}) <---this command show all documents which have age less than 5 and greater than 32
+
+db.employee.find({$nor:[{age:{$lte:20}},{age:{$gte:31}}]}) <---opposite of $or operator this command show all documents between age 20 and 31
+
+db.practice.find({$and:[{age:{$lt:20}},{hobbies:'boxing'}]}) <---this command will take both conditions
+
+db.practice.find({$and:[{age:{$lt:19}},{age:{$gt:12}}]}) <---this command will take both conditions and json keys, show results between 12 and 19
+
+db.practice.find({$and:[{age:{$not:{$lt:19}}},{age:{$not:{$gt:12}}}]}) <--$not operator will change condition for example $lt will converted to(not $lt means $gt and
+$gt will converted to(not $gt means $lt operators). However $not operator less used in daily life as compared to $ne
+
+Note:
+db.collection.find({age:{$lt:12},age:{$gt:6}}) <---in simple json same key if given the first key and value will be neglected however
+the last key and value will be used, to avoid this use $and operator for same keys json.  
+
+
+Evaluation Operators:($expr,$jsonSchema,$regex,$text,$mod)
+ 
+$expr(expression):
+The $expr operator takes a mongoDB expression as its argument and returns result of the expression. You 
+can use this operator to perform comparisons, arithmetic operations and other types of expressions within the 
+query pipeline. 
+Example:
+db.collection.find({$expr:{$gt:["$field1","$field2"]}}) <--"$field1" is greater than "$field2"
+
+
+$regex(regular expression):
+Selects documents where values match a specified regular expression
+Example:
+db.collection.find({name:{$regex:/^A/}}) <--this query will show all names documents which have started letter 'A'
+
+
+$text:
+To use the $text operator, you must create a text index on fields
+you want to search. A text index allows MongoDB to search for
+specific words and phrases in the indexed fields and return documents
+that match search criteria.
+Example:
+step 1:
+db.collection.createIndex({bio:"text"}) <--choose one field (e.g: bio) than create index on field bio 
+
+step 2:
+db.collection.find({$text:{$search:"youtube"}) <--than use search operator and give match value (e.g: youtube) this will show all documents which have string
+value youtube. it is use as full text search  
+
+
+$mod:
+Example:
+db.collection.find({age:{$mod:[2,0]}}) <--show all age field documents which is completely divisible by 2 and remainder become 0 or show all even 
+numbers age field documents.
+
+
+json schema validation command:
+
+db.createCollection('Books_librarty',
+    {
+        validator: {
+            $jsonSchema: {
+                required: ['book_name', 'book_price'],
+                properties: {
+                    book_name: {
+                        bsonType: 'string',
+                        description: 'must be a string and required'
+                    },
+                    book_price: {
+                        bsonType: 'number',
+                        description: 'must be a number and required'
+                    }
+                }
+            }
+        },
+        validationAction: 'error'
+    })
+
+
+ json schema validation modifier command: (collMod=>collection modifier)
+
+db.runCommand(
+    {
+        collMod: 'books_library',
+        validator: {
+            $jsonSchema: {
+                required: ['book_name','authors'],
+                properties: {
+                    book_name: {
+                        bsonType: 'string',
+                        description: 'must be a string and is required'
+                    },
+
+                    authors: {
+                        bsonType: 'array',
+                        description: 'must be an array and is required',
+                        // items: {
+                        //     bsonType: 'object',
+                        //     required: ['authors'],
+                        //     properties: {
+                        //         authors: {
+                        //             bsonType: 'string'
+                        //         }
+                        //     }
+                        // }
+                    },
+                }
+            }
+        },
+        validationAction: 'error'
+    }
+)
+
+
+Write concern: <--- Write concern in MongoDB specifies the level of acknowledgment requested from MongoDB when performing write operations.
+
+{w:<value>, j:<boolean>, wtimeout:<number>}  <---w:acknowledgment, j:journal, wtimout:give key in milliseconds 
+
+db.collection_name.insertOne({book:'Chemistry',price:110},{writeConcern:{w:0,j:false,wtimeout:1000}})
+
+db.collection_name.insertOne({book:'Math',price:150},{writeConcern:{w:1,j:true,wtimeout:2000}})
+
+
+Import json in MongoDB through cmd:
+to import json files through command prompt we need to download the msi version of "MongoDB Command Line Database Tools" and "MongoDB Shell" install it in the system
+C:\Program Files\MongoDB\Tools\100\bin then copy this path open environment variables system variables select path edit new paste it and ok.Now move
+to the folder where your json file keeped copy the path from address bar open cmd type this command in "" paste the copyed folder path if we don't have
+database and collection this command will automatically create both of these with the help of import json file. -d means database and -c means collection  
+mongoimport "C:\Users\Junaidi\Documents\mongodb_data\Teachers.json" -d School -c Teachers --jsonArray --drop  press enter check the imported json file on 
+mongoshell or mongodbcompass.
+
+Element Query Operators $exists and $type:
+
+note:both operators have same output results.
+
+$exists:Find the desired field/key and value from one and all documents whether it is exist in document or not
+for example: db.collection.find({hasCSSdegree:{$exists:true}})
+
+$type:By value's datatype find the desired field e.g boolean,string,number etc
+for example: db.collection.find({hasCSSdegree:{$type:"bool"}}) 
+
+Advanced update operators($inc, $min, $max, $mul, $unset, $rename & upsert):
+
+$inc ---increment
+example:
+db.employee.updateOne({name: 'Abdullah'},{$inc:{age:2}}) -->increment(increase) if age of 'Abdullah' is 15 it will increase to '17' age:2 represent 2 numbers
+of increment in age
+
+db.employee.updateOne({name: 'Abdullah'},{$inc:{age:-2}}) -->decrement(decrease) if age of 'Abdullah' is 15 it will decrease to '13' age:-2 represent 2 numbers
+of decrement in age
+
+db.employee.updateMany({},{$inc:{age:1}})
+
+$min, $max: (min= kam karna/decrease, max= barhana/increase)
+example:
+db.employee.updateOne({name: 'Abdullah'},{$min:{age:15}}) <-- if 'Abdullah' has age 30 it will decrease to age 15
+
+db.employee.updateOne({name: 'Abdullah'},{$max:{age:50}}) <-- if 'Abdullah' has age 30 it will increase to age 50
+
+$mul -->multiply
+example:
+db.employee.updateOne({name: 'Abdullah'},{$mul:{age:2}}) <-- multiply person's age by 2  i.e: 20*2=40
+
+$unset:(delete document's field)
+
+db.employee.updateOne({name:"Basit"},{$unset:{country:""}})
+
+db.employee.updateMany({},{$unset:{password:""}})
+
+$rename:(Rename fields/keys)
+
+db.employee.updateOne({sro_name:"Khalid"},{$rename:{student_age:"age"}})
+
+db.employee.updateMany({},{$rename:{age:"sro_age", branch:"sro_branch"}})
+                                            ^-----------------^
+                                           multiple fields rename
+
+upsert:(insert/add document)
+db.employee.updateOne({name: 'Hamdan'},{$set:{age:16}},{upsert:true}) <--if update command did not update or find the document name: 'Hamdan' it will 
+automatically add this name and age documents with objectid in last next document in your collection.
+
+
+Update Nested Arrays, Array of objects and Use $pop, $pull, $push and $addToSet Operators:
+
+Array update rules:
+First matched array element update
+All matched array elements update 
+All array elements update whether it is matched or not
+
+
+db.practice.updateOne({experience:{$elemMatch:{duration:{$lte:1}}}},{$set:{"experience.$":{company:'Temu',duration:0.5}}}) <---In first document update/replace the first match array element 
+
+db.practice.updateMany({experience:{$elemMatch:{duration:{$lte:1}}}},{$set:{"experience.$":{newfieldname:value}}}) <--In all documents update/replace the first match array element 
+
+db.practice.updateMany({experience:{$elemMatch:{duration:{$lte:1}}}},{$set:{"experience.$.neglect":true}}) <--In all documents in the first match array element the new field neglect:true will be inserted
+
+db.practice.updateMany({experience:{$elemMatch:{duration:{$lte:1}}}},{$set:{"experience.$[].reject":true}}) <--All documents of all arrays the new field reject:true will be inserted whether it is matched or not
+
+db.practice.updateMany({experience:{$elemMatch:{duration:{$lte:1}}}},{$set:{"experience.$[e].reject":true}},{arrayFilters:[{"e.duration":{$lte:1} }]})
+
+$push:
+db.practice.updateOne({_id: ObjectId('677fff4553b0def7d8fa482b')},{$push:{experience:{company:'Meta',duration:3.5}}}) <--Add array data after the last array same/duplicate array data can be inserted as well
+
+$addToSet:
+db.practice.updateOne({_id: ObjectId('677fff4553b0def7d8fa482b')},{$addToSet:{experience:{company:'Meta',duration:1.5}}}) <--Add array data after last array same/duplicate array data cannot be inserted
+
+$pull:
+db.practice.updateOne({_id: ObjectId('677fff4553b0def7d8fa482b')},{$pull:{experience:{company:'Dell',duration:1.5}}}) <--In array field delete array data from any where
+
+$pop:
+db.practice.updateOne({name:'Qasim'},{$pop:{experience:-1}}) <--delete start array value
+
+db.practice.updateOne({name:'Qasim'},{$pop:{experience:1}}) <--delete last array value
+
+
+MongoDB Indexing:(collectionscan/collscan and indexscan/IXSCAN)
+
+*Indexes are stored in a Balance-tree data structure.
+*It stores Index keys and Pointers to the documents in the collection.
+*When a query is executed, MongoDB can use the index to quickly locate the documents that match the query by searching through the B-tree.
+db.teachers.dropIndex('name_of_index')
+db.teachers.find({age:{$lte:30}}).explain() <--explain() works in find queries, show details and how the scans perform whether it is collscan or indexscan 
+db.teachers.find({age:{$lte:30}}).explain("executionStats") <--works in find queries, show scan details and executionStats.
+db.teachers.find({age:{$gte:27},gender:'male'}).explain('executionStats')
+db.teachers.dropIndex("age_1") <--delete index age_1
+db.teachers.getIndexes() <--show all indexes 
+
+When not to use indexing in mongodb?
+1. When the collection is small
+2. When the collection is frequently updated
+3. When the queries are complex ( multiple fields )
+4. When the collection is large ( make less indexes )
+
+Single field Index:
+db.teachers.createIndex({age : 1}) <--create single field index on age field where as '1' is used to sorting age in ascending order in b-tree structure 
+db.teachers.createIndex({age : -1}) <--create single field  index on age field where as '-1' is used to sorting age in descending order in b-tree structure
+db.teachers.createIndex({name:1},{unique : true}) <--sorting name in ascending order in b-tree structure unique:true <--(constraint) willn't allowed same 
+or duplicate name
+
+Compound Indexes:
+db.teachers.createIndex({age:1, gender:1})
+
+Text Indexes:
