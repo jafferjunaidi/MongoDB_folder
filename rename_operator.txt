@@ -1,0 +1,64 @@
+---Set Operator----
+db.SRO.update
+(
+   {},
+   {$set:{branch:"main branch"}}, {multi:true}
+)
+
+--new method--
+
+db.SRO.updateOne({name:"Basit"},{$set:{country:"Pakistan"}})
+
+
+db.SRO.updateMany({},{$set:{password:"1234"}})
+
+
+
+---Unset Operator----
+
+db.SRO.updateOne({name:"Basit"},{$unset:{country:""}})  <--delete field country in one document
+
+
+db.SRO.updateMany({},{$unset:{password:""}})  <--delete field password in all documents
+
+
+--Rename Operator---
+
+db.SRO.updateOne({sro_name:"Khalid"},{$rename:{city:"sro_city"}})
+
+db.SRO.updateMany({},{$rename:{age:"sro_age", branch:"sro_branch"}})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
