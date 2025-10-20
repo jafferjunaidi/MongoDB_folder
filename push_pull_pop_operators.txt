@@ -1,0 +1,58 @@
+----Array----
+
+db.SRO.updateMany
+(
+   {},
+   {$set:{slot:["9-11","11-1"]}}
+)
+
+db.SRO.updateOne
+(
+   {name:"Hamdan"},
+   {$set:{slot:["3-5"]}}
+)
+
+----Push operator----- add
+
+db.workers.updateOne({name:'Ahmed'},{$push:{City:'Karachi'}})
+
+
+db.SRO.updateMany
+(
+  {},
+  {$push:{slot:"7-9"}}
+)
+
+
+-----Pull operator---- delete anywhere array 
+
+db.SRO.updateMany
+(
+  {},
+  {$pull:{slot:"1-3"}}
+)
+
+
+----Pop operator---- start and last array delete
+db.SRO.updateMany
+(
+  {},
+  {$pop:{slot:-1}}
+)
+
+----Pop operator----
+db.SRO.updateMany
+(
+  {},
+  {$pop:{slot:1}}
+)
+
+
+
+
+
+
+
+
+
+
